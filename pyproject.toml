@@ -1,0 +1,23 @@
+[project]
+name = "coverage-gbm"
+version = "0.1.0"
+description = "Radar coverage model (LightGBM): data prep from product tables, training, evaluation, offline report + query tool"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "numpy>=2.5.1",
+    "pandas>=3.1.1",
+    "pyarrow>=25.0.0",
+    "scipy>=1.18.0",
+    "scikit-learn>=1.9.1",
+    "lightgbm>=4.7.0",
+    "h3>=4.5.0",
+    "matplotlib>=3.11.1",
+    "pyyaml>=6.0.3",
+    # the synthetic generator (srd, repo root or vendor/) also needs:
+    "pydantic>=2.13.4",
+    "python-ulid>=4.0.1",
+]
+
+[tool.uv]
+package = false

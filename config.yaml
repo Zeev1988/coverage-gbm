@@ -1,0 +1,40 @@
+# Coverage model - all settings in one place. Relative paths are relative to this file.
+# Any value can be overridden on the command line:   ./run.sh data.body_frac=0.3 model.max_fit_rows=5000000
+# Full list of settings and defaults: covgbm/config.py (DEFAULTS).
+
+paths:
+  corpus: data/corpus      # product tables: date=*/batch=*/ plots, tracks/, systems.parquet, terrain_h3.parquet
+  work: work               # intermediate: examples table, predictions (can be deleted after a run)
+  results: results         # report.html, metrics/*.json, model/ (the query tool needs only model/)
+
+data:
+  # REAL DATA: bodies = fused system tracks, label = "witness" (radar had a plot near the track)
+  bodies: fused_tracks
+  label: witness
+  envelope: estimated          # sector estimated from the previous day's plots; range/elevation from systems
+  fused_collection_regex: "^TRACK-50__"
+  witness_gate_m: 1500
+  window_s: 30
+  body_frac: 1.0               # lower (e.g. 0.2) if the examples table gets too big
+  workers: 4                   # days processed in parallel (each needs ~one day of plots in RAM)
+  # SYNTHETIC DATA with oracle truth instead:  bodies: truth  label: truth  envelope: truth
+
+split:                         # by day; null = fractions
+  val_start: null
+  test_start: null
+  val_frac: 0.65
+  test_frac: 0.8
+
+model:
+  use_radar_id: true
+  max_fit_rows: 20000000       # lower if training runs out of memory
+
+evaluate:
+  use_los_in_hard: true        # "inside envelope" also requires a clear line of sight
+  hidden_radars: {enabled: true, k: 5}
+  spatial: {enabled: true, cell_km: 40, holdout_frac: 0.2}
+
+report:
+  map_radars: 4
+  map_alt_agl_m: [100, 1000]
+  map_rcs_m2: [0.1, 1.0]
