@@ -38,3 +38,8 @@ report:
   map_radars: 4
   map_alt_agl_m: [100, 1000]
   map_rcs_m2: [0.1, 1.0]
+
+insights:                      # step 5: aggregate bundle that can leave the closed network (results/insights/)
+  min_count: 20                # cells with fewer rows are suppressed
+  anonymize_radars: true       # pseudonymous radar ids; the mapping stays in results/insights_private/
+  include_geo: false           # true adds per-cell detection rates in a local frame (no absolute coordinates)

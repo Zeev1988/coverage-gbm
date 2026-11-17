@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Full pipeline: prepare -> train -> evaluate -> report.  Resumable: finished days are skipped.
+# Full pipeline: prepare -> train -> evaluate -> report -> insights.  Resumable: finished days are skipped.
 #   ./run.sh                          uses config.yaml
 #   ./run.sh --config other.yaml      another config
 #   ./run.sh data.body_frac=0.3       any override (see config.yaml)
@@ -11,7 +11,7 @@ PY=${PY:-.venv/bin/python}
 export PYTHONPATH="$PWD:$PWD/vendor:$PWD/../..${PYTHONPATH:+:$PYTHONPATH}"   # srd: vendor/ in a bundle, repo root in the repo
 ARGS=("$@")
 if [[ ! " ${ARGS[*]-} " == *" --config "* ]]; then ARGS=(--config config.yaml "${ARGS[@]+"${ARGS[@]}"}"); fi
-STEPS=${STEPS:-"prepare train evaluate report"}
+STEPS=${STEPS:-"prepare train evaluate report insights"}
 mkdir -p logs
 for s in $STEPS; do
   echo "=== $s  $(date '+%F %T')"

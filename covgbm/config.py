@@ -73,6 +73,13 @@ DEFAULTS = {
         "map_rcs_m2": [0.1, 1.0],
         "map_step_km": 2.0,
     },
+    "insights": {                       # step 5: exportable aggregate bundle (see covgbm/insights.py)
+        "min_count": 20,                # every table/cube cell with fewer rows is dropped
+        "anonymize_radars": True,       # radar ids -> stable pseudonyms; the mapping stays in results/insights_private/
+        "salt": None,                   # pseudonym salt (None = derived from the radar list); set your own to make pseudonyms unguessable
+        "include_geo": False,           # True adds detection rates per local-frame cell (no absolute coordinates)
+        "shap_rows": 100_000,           # rows for SHAP response curves (0 = skip)
+    },
     "query": {
         "history": "typical",           # typical | quiet | busy : which radar-load level to assume
         "default_speed_mps": 30.0,

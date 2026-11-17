@@ -15,7 +15,7 @@ fi
 O="--config config.yaml paths.corpus=$PWD/smoke/corpus paths.work=$PWD/smoke/work paths.results=$PWD/smoke/results
    data.workers=2 split.val_start=3 split.test_start=5 evaluate.hidden_radars.k=2 evaluate.spatial.cell_km=20
    model.max_fit_rows=2000000 report.map_radars=2 report.map_step_km=4"
-for s in prepare train evaluate report; do
+for s in prepare train evaluate report insights; do
   echo "=== $s"
   "$PY" -m covgbm.$s $O
 done
