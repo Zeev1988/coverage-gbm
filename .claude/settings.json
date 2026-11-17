@@ -1,0 +1,12 @@
+{
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {"source": {"source": "github", "repo": "anthropics/claude-plugins-official"}},
+    "runpod": {"source": {"source": "github", "repo": "runpod/runpod-plugins-official"}}
+  },
+  "enabledPlugins": {
+    "notion@claude-plugins-official": true,
+    "linear@claude-plugins-official": true,
+    "huggingface-skills@claude-plugins-official": true,
+    "runpod@runpod": true
+  }
+}
