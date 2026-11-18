@@ -57,8 +57,6 @@ def hard_report(te, use_los=True):
     rep["by_range_frac"] = by(g, "range_frac", bins=[0, .25, .5, .75, .9, 1.0001])
     rep["by_agl_m"] = by(g, "agl_m", bins=[-1e9, 50, 150, 300, 1000, 3000, 1e9],
                          labels=["<50", "50-150", "150-300", "300-1000", "1000-3000", ">3000"])
-    if "archetype" in g and g.archetype.nunique() > 1:
-        rep["by_archetype"] = by(g, "archetype")
     return rep, m
 
 

@@ -18,5 +18,5 @@ else
     .venv/bin/pip install -r requirements.txt
   fi
 fi
-.venv/bin/python -c "import numpy, pandas, pyarrow, lightgbm, h3, sklearn, scipy, matplotlib, yaml, pydantic, ulid; print('environment ok')"
-echo "next: ./smoke_test.sh   (a few minutes, checks everything end to end)"
+.venv/bin/python -c "import numpy, pandas, pyarrow, lightgbm, h3, sklearn, scipy, matplotlib, yaml; print('environment ok')"
+echo "next: put the data in data/corpus and run ./run.sh"

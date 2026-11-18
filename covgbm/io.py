@@ -1,10 +1,9 @@
-"""Readers for the product tables (layout and names per docs/SYNTH-COLUMNS.md).
+"""Readers for the product tables.
 
   <corpus>/date=YYYY-MM-DD/batch=BB/*.parquet (+ manifest.json)   plots, 30-min batches
   <corpus>/tracks/datetime_partition=YYYY-MM-DD/*.parquet         tracks
   <corpus>/systems.parquet                                          one row per radar
   <corpus>/terrain_h3.parquet                                       h3_cell -> terrain_ft
-Synthetic corpora also have plan.json and envelopes.json (truth; optional).
 """
 import json
 import re
@@ -106,15 +105,3 @@ def read_fused_tracks(corpus, date, regex):
         "vx": t["entity_statevector_velocity_vx"].fillna(0).to_numpy(float),
         "vy": t["entity_statevector_velocity_vy"].fillna(0).to_numpy(float),
     })
-
-
-def read_truth_envelopes(corpus):
-    p = Path(corpus) / "envelopes.json"
-    if not p.exists():
-        return None
-    return {int(k): v for k, v in json.loads(p.read_text()).items()}
-
-
-def read_plan_json(corpus):
-    p = Path(corpus) / "plan.json"
-    return json.loads(p.read_text()) if p.exists() else None

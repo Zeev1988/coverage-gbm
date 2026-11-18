@@ -77,8 +77,7 @@ def main(argv=None):
     parts = []
     parts.append(f"""
 <h1>מודל כיסוי ראדר – דוח תוצאות</h1>
-<p class="sub">config hash <code>{meta['config_hash']}</code> · label <code>{meta['label']}</code> ·
-bodies <code>{meta['bodies']}</code> · envelope <code>{meta['envelope']}</code> · מצב ראדרים נכון ל־{radars['last_day']}</p>
+<p class="sub">config hash <code>{meta['config_hash']}</code> · מצב ראדרים נכון ל־{radars['last_day']}</p>
 <div class="box">
 <b>השאלה:</b> האם ראדר R יזהה גוף בגודל X (RCS) שעובר בנקודה/פוליגון בגובה H?<br>
 <b>התשובה של המודל:</b> הסתברות, לכל חלון של {radars['window_s']} שניות, שהראדר יפיק לפחות <code>plot</code> אחד של הגוף.<br>
@@ -111,19 +110,11 @@ bodies <code>{meta['bodies']}</code> · envelope <code>{meta['envelope']}</code>
 (<b>מגזים</b>, כי חלונות סמוכים תלויים), והחלון הטוב ביותר נותן {fmt(P['predicted_rate_max_window'])} (חסם תחתון).
 האמת נמצאת ביניהם. AUC ברמת מעבר: {fmt(P['auc_indep'])}.</p>""")
 
-    W = main_.get("witness_label_check")
-    if W:
-        parts.append(f"""<h3>בדיקת תוויות witness מול אמת (רק בדאטא סינתטי)</h3>
-<p>אותן שורות, תווית witness (מה שאפשר לחשב בדאטא אמיתי) מול תווית האמת של הסימולטור: הסכמה {fmt(W['agreement'])};
-מתוך מה ש־witness קרא "זוהה", {fmt(W['witness_says_detected_but_truth_not'])} לא זוהו באמת;
-מתוך הזיהויים האמיתיים, witness פספס {fmt(W['truth_detected_but_witness_missed'])}.
-AUC של המודל מול תווית האמת: <b>{fmt(W['model_auc_vs_truth_label'])}</b> (מול witness: {fmt(W['model_auc_vs_witness_label'])}).</p>""")
     parts.append("<h2>2. איפה המודל טוב ואיפה פחות</h2>")
     parts.append(breakdown(H.get("by_family"), "לפי סוג ראדר (family)"))
     parts.append(breakdown(H.get("by_rcs_m2"), "לפי גודל הגוף (RCS, m²)"))
     parts.append(breakdown(H.get("by_range_frac"), "לפי מרחק כחלק מהטווח המקסימלי"))
     parts.append(breakdown(H.get("by_agl_m"), "לפי גובה מעל הקרקע (m)"))
-    parts.append(breakdown(H.get("by_archetype"), "לפי סוג גוף (רק בדאטא סינתטי)"))
     if H.get("by_radar"):
         rows = sorted([dict(radar=k, **v) for k, v in H["by_radar"].items()], key=lambda r: (r["auc"] is None, r["auc"] or 0))
         parts.append("<h4>לפי ראדר (מהחלש לחזק)</h4><div class='scroll'>" + table(

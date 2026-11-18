@@ -12,7 +12,6 @@ After a run: `results/report.html` (report with explanations and a glossary), `.
 
 ```bash
 ./install.sh            # uv sync --frozen  (or pip -r requirements.txt if there is no uv)
-./smoke_test.sh         # end-to-end check on a tiny synthetic corpus, a few minutes
 ```
 - Internal mirror: `export UV_INDEX_URL=...` (or `PIP_INDEX_URL`) before `./install.sh`.
 - No mirror at all: prepare outside with `WHEELS=1 ./make_bundle.sh`, and inside run `WHEELS=vendor/wheels ./install.sh`.
@@ -20,7 +19,7 @@ After a run: `results/report.html` (report with explanations and a glossary), `.
 
 ## 1. Where the data goes
 
-In `config.yaml`: `paths.corpus` (default `data/corpus`). The layout is the product contract (`docs/SYNTH-COLUMNS.md` in the repo):
+In `config.yaml`: `paths.corpus` (default `data/corpus`). The layout is the product contract:
 ```
 data/corpus/date=YYYY-MM-DD/batch=BB/*.parquet  (+ manifest.json)   plots
 data/corpus/tracks/datetime_partition=YYYY-MM-DD/*.parquet          tracks (needs the fused tracks TRACK-50__*)
@@ -70,16 +69,11 @@ Decimal degrees, metres, m², m/s.
 - `point`: probability for a 30 s window. If the point is outside the envelope (beyond range, outside the sector, hidden by terrain), a `NOTE` is printed: the model was not measured there.
 - `pass` / `polygon`: two bounds are printed. "Best window" is a lower bound, and `P(at least one)` (windows treated as independent) is an upper bound. The truth lies between them, because neighbouring windows are correlated.
 
-## 4. Two labelling modes
+## 4. Bodies and labels
 
-| | real data (default) | synthetic data with ground truth |
-|---|---|---|
-| `data.bodies` | `fused_tracks`: the fused system tracks | `truth`: the targets from `plan.json` |
-| `data.label` | `witness`: R has a plot near an update of the track | `truth`: `src_target_id` |
-| `data.envelope` | `estimated`: sector from yesterday's plots, range/elevation from systems | `truth`: `envelopes.json` |
-
-`witness` in detail: a plot of R within `max(1500 m, 1% of range)` of an update of a fused track counts as a detection, where every update is extended by +-6 s according to its velocity. The plot is credited to all tracks inside the gate, because duplicate tracks of the same body are common.
-On synthetic data `witness` is computed next to the truth, and the report shows the agreement. In the smoke test: 95% agreement, `witness` misses about 5% of true detections and almost never invents one.
+- **Bodies:** the fused system tracks (`collectionname` matching `data.fused_collection_regex`, default `^TRACK-50__`).
+- **Label (`witness`):** a plot of R within `max(1500 m, 1% of range)` of an update of a fused track counts as a detection of that body, where every update is extended by +-6 s according to its velocity. The plot is credited to all tracks inside the gate, because duplicate tracks of the same body are common.
+- **Envelope:** the sector is estimated from the previous day's plots; range and elevation come from `systems.parquet`.
 
 **Important limitation of `witness`:** the table only contains bodies that somebody tracked. Bodies that no sensor saw are missing, so the model is optimistic for particularly hard bodies.
 
@@ -106,8 +100,7 @@ covgbm/train.py      training + metrics;  evaluate.py  generalisation tests;  me
 covgbm/report.py     HTML report;  query.py  question tool
 covgbm/insights.py   aggregate export bundle + retraining from it
 covgbm/terrain.py    terrain from h3 + horizon per radar;  geo.py  coordinates (4/3 earth)
-generator/smoke.yaml tiny scenario for the smoke test
-make_bundle.sh       packaging for transfer to the closed network (includes the srd generator)
+make_bundle.sh       packaging for transfer to the closed network
 ```
 
 ## 7. Transfer to the closed network
@@ -115,7 +108,7 @@ make_bundle.sh       packaging for transfer to the closed network (includes the 
 ```bash
 ./make_bundle.sh          # -> dist/coverage-gbm-<sha>.tar.gz  (+ WHEELS=1 if there is no mirror there)
 ```
-On the other side: extract, `./install.sh`, `./smoke_test.sh`, put the data in `data/corpus`, `./run.sh`.
+On the other side: extract, `./install.sh`, put the data in `data/corpus`, `./run.sh`.
 
 ## 8. Insights bundle: what can leave the confidential environment
 

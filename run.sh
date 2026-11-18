@@ -8,7 +8,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 PY=${PY:-.venv/bin/python}
 [ -x "$PY" ] || { echo "no environment: run ./install.sh first"; exit 1; }
-export PYTHONPATH="$PWD:$PWD/vendor:$PWD/../..${PYTHONPATH:+:$PYTHONPATH}"   # srd: vendor/ in a bundle, repo root in the repo
+export PYTHONPATH="$PWD${PYTHONPATH:+:$PYTHONPATH}"
 ARGS=("$@")
 if [[ ! " ${ARGS[*]-} " == *" --config "* ]]; then ARGS=(--config config.yaml "${ARGS[@]+"${ARGS[@]}"}"); fi
 STEPS=${STEPS:-"prepare train evaluate report insights"}

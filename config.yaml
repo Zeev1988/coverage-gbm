@@ -8,16 +8,13 @@ paths:
   results: results         # report.html, metrics/*.json, model/ (the query tool needs only model/)
 
 data:
-  # REAL DATA: bodies = fused system tracks, label = "witness" (radar had a plot near the track)
-  bodies: fused_tracks
-  label: witness
-  envelope: estimated          # sector estimated from the previous day's plots; range/elevation from systems
+  # bodies = fused system tracks, label = "witness" (radar had a plot near the track);
+  # sector estimated from the previous day's plots, range/elevation from systems
   fused_collection_regex: "^TRACK-50__"
   witness_gate_m: 1500
   window_s: 30
   body_frac: 1.0               # lower (e.g. 0.2) if the examples table gets too big
   workers: 4                   # days processed in parallel (each needs ~one day of plots in RAM)
-  # SYNTHETIC DATA with oracle truth instead:  bodies: truth  label: truth  envelope: truth
 
 split:                         # by day; null = fractions
   val_start: null

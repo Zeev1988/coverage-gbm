@@ -3,7 +3,7 @@
 Units: angles in radians in every data table (the product contract); degrees only in
 the command-line tools and the report. Positions are converted to a local flat frame
 (x east, y north, metres) around an origin = mean radar position. Elevation angles
-use the standard 4/3-earth refraction model (same as the generator).
+use the standard 4/3-earth refraction model.
 """
 import numpy as np
 

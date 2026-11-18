@@ -8,7 +8,7 @@ import pyarrow.parquet as pq
 
 from .features import FEATURES
 
-KEEP = list(dict.fromkeys(FEATURES + ["sid", "label", "day", "body", "win", "t_mid", "archetype", "tgt_x_km", "tgt_y_km", "label_truth"]))
+KEEP = list(dict.fromkeys(FEATURES + ["sid", "label", "day", "body", "win", "t_mid", "tgt_x_km", "tgt_y_km"]))
 
 
 def day_files(work):

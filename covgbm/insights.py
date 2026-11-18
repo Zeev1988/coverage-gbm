@@ -503,11 +503,8 @@ def main(argv=None):
     summary = dict(rows=len(df), days=int(df.day.nunique()), radars=int(df.sid.nunique()), families=sorted(df.family.astype(str).unique()),
                    split=dict(val_start=vs, test_start=ts), share_outside_envelope=float(1 - ins.mean()),
                    share_los_blocked=float((df.los_margin_deg <= 0).mean()), detected_rate_inside=float(gin.label.mean()) if len(gin) else None,
-                   test_inside_envelope=base, trees=int(m.best_iteration), pre_test_sampling=frac, label_mode=cfg.data.label,
-                   bodies=cfg.data.bodies, envelope=cfg.data.envelope, terrain=terrain,
+                   test_inside_envelope=base, trees=int(m.best_iteration), pre_test_sampling=frac, terrain=terrain,
                    privacy=dict(min_count=min_count, anonymize_radars=bool(ic["anonymize_radars"]), include_geo=include_geo))
-    if "label_truth" in df and len(gin) and (gin.label_truth >= 0).any():
-        summary["witness_vs_truth_agreement"] = float((gin.label == gin.label_truth).mean())
 
     cube, cmeta = build_cube(df, min_count)
     if len(cube):
@@ -523,7 +520,7 @@ def main(argv=None):
 
     f3 = lambda v: "n/a" if v is None else f"{v:.3f}"
     md = ["# Insights bundle", "",
-          f"Config hash `{C.cfg_hash(cfg)}`; model {summary['trees']} trees; label `{cfg.data.label}`, bodies `{cfg.data.bodies}`.", "",
+          f"Config hash `{C.cfg_hash(cfg)}`; model {summary['trees']} trees.", "",
           f"- {summary['rows']:,} example rows, {summary['days']} days, {summary['radars']} radars; "
           f"{100 * summary['share_outside_envelope']:.0f}% of rows outside the envelope (excluded from every rate and metric).",
           f"- Detection rate inside the envelope: {f3(summary['detected_rate_inside'])}",

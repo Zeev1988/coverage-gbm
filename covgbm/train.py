@@ -74,19 +74,10 @@ def main(argv=None):
                inside_envelope=hard if use_los else hard_noslos,
                inside_envelope_any_los=hard_noslos,
                pass_level=pass_level(te, mask))
-    if "label_truth" in te:   # synthetic corpus with witness labels: how good are the labels?
-        g = te[mask]
-        lt, lw = g.label_truth.to_numpy(), g.label.to_numpy()
-        rep["witness_label_check"] = dict(
-            n=int(len(g)), truth_rate=float(lt.mean()), witness_rate=float(lw.mean()),
-            agreement=float((lt == lw).mean()),
-            witness_says_detected_but_truth_not=float(((lw == 1) & (lt == 0)).sum() / max(1, (lw == 1).sum())),
-            truth_detected_but_witness_missed=float(((lt == 1) & (lw == 0)).sum() / max(1, (lt == 1).sum())),
-            model_auc_vs_truth_label=basic(lt, g.p.to_numpy())["auc"], model_auc_vs_witness_label=basic(lw, g.p.to_numpy())["auc"])
     (res / "metrics" / "main.json").write_text(json.dumps(rep, indent=1, default=str))
-    keep = [c for c in ("day", "sid", "body", "win", "t_mid", "family", "archetype", "label", "p", "range_frac",
+    keep = [c for c in ("day", "sid", "body", "win", "t_mid", "family", "label", "p", "range_frac",
                         "az_off_frac", "el_frac", "era_active", "los_margin_deg", "agl_m", "log10_rcs", "slant_km",
-                        "tgt_x_km", "tgt_y_km", "label_truth") if c in te]
+                        "tgt_x_km", "tgt_y_km") if c in te]
     te[keep].to_parquet(work / "test_predictions.parquet", index=False)
 
     # the model bundle: everything the query tool needs, no corpus required
@@ -94,8 +85,7 @@ def main(argv=None):
     mb.mkdir(parents=True, exist_ok=True)
     m.save_model(mb / "model.txt", num_iteration=m.best_iteration)
     meta = dict(features=feats, families=list(df.family.cat.categories), sids=[int(s) for s in df.sid.cat.categories],
-                config_hash=C.cfg_hash(cfg), label=cfg.data.label, bodies=cfg.data.bodies, envelope=cfg.data.envelope,
-                trained_on_days=f"< {vs}", load_levels=load_levels(df))
+                config_hash=C.cfg_hash(cfg), trained_on_days=f"< {vs}", load_levels=load_levels(df))
     (mb / "meta.json").write_text(json.dumps(meta, indent=1))
     for f in (work / "radar_static").glob("*"):
         shutil.copy(f, mb / f.name)

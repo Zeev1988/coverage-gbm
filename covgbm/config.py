@@ -22,8 +22,6 @@ DEFAULTS = {
         "results": "results",           # report.html, metrics json, query bundle
     },
     "data": {
-        "label": "witness",             # witness (real data) | truth (synthetic, needs src_target_id + plan.json)
-        "bodies": "fused_tracks",       # fused_tracks (real data) | truth (synthetic plan.json)
         "fused_collection_regex": r"^TRACK-50__",
         "witness_gate_m": 1500.0,       # plot within this distance of a fused-track update = detection of that body
         "witness_gate_range_frac": 0.01, # ... or this fraction of the plot's range, whichever is larger
@@ -35,7 +33,6 @@ DEFAULTS = {
         "range_factor": 1.3,            # radar considered for a body if ground distance <= factor x max range
         "history_min": 10,
         "n_sectors": 12,
-        "envelope": "estimated",        # estimated (from systems + previous day's plots) | truth (synthetic envelopes.json)
         "min_agl_m": 0.0,               # drop rows with the body below this height above terrain (null = keep all)
         "body_frac": 1.0,               # keep this fraction of bodies (hash of the id), to shrink very large data
         "day_start": 0,                 # day index range to process (day_start-1 is read for warm-up only)
@@ -95,7 +92,7 @@ def _merge(a, b):
 
 
 class Cfg(dict):
-    """dict with attribute access: cfg.data.label"""
+    """dict with attribute access: cfg.data.window_s"""
     def __getattr__(self, k):
         v = self[k]
         return Cfg(v) if isinstance(v, dict) else v

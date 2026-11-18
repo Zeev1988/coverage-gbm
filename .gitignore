@@ -224,5 +224,4 @@ runs/
 cost-guard.log
 .superpowers/
 .DS_Store
-smoke/
 _to_delete/

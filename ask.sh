@@ -5,5 +5,5 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 PY=${PY:-.venv/bin/python}
-export PYTHONPATH="$PWD:$PWD/vendor:$PWD/../..${PYTHONPATH:+:$PYTHONPATH}"
+export PYTHONPATH="$PWD${PYTHONPATH:+:$PYTHONPATH}"
 exec "$PY" -m covgbm.query "$@"

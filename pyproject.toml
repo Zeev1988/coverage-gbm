@@ -14,9 +14,6 @@ dependencies = [
     "h3>=4.5.0",
     "matplotlib>=3.11.1",
     "pyyaml>=6.0.3",
-    # the synthetic generator (srd, repo root or vendor/) also needs:
-    "pydantic>=2.13.4",
-    "python-ulid>=4.0.1",
 ]
 
 [tool.uv]
